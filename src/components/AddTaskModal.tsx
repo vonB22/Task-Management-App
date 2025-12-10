@@ -1,113 +1,165 @@
-import React, { useState } from 'react';
+import * as React from 'react';
 import type { Task, TaskStatus, TaskCategory } from '../types';
 import { Modal } from './Modal';
 import { Button } from './Button';
+import { Input } from './Input';
+import { Textarea } from './Textarea';
+import { Select, SelectOption } from './Select';
+import { Label } from './Label';
 
-interface AddTaskModalProps {
+export interface AddTaskModalProps {
+  /** Whether the modal is open */
   isOpen: boolean;
+  /** Callback when the modal should close */
   onClose: () => void;
+  /** Callback when a task is added */
   onAdd: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => void;
 }
 
-export const AddTaskModal: React.FC<AddTaskModalProps> = ({ isOpen, onClose, onAdd }) => {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [category, setCategory] = useState<TaskCategory>('other');
-  const [status, setStatus] = useState<TaskStatus>('todo');
+const AddTaskModal = React.forwardRef<HTMLDivElement, AddTaskModalProps>(
+  ({ isOpen, onClose, onAdd }, ref) => {
+    const [title, setTitle] = React.useState('');
+    const [description, setDescription] = React.useState('');
+    const [category, setCategory] = React.useState<TaskCategory>('other');
+    const [status, setStatus] = React.useState<TaskStatus>('todo');
+    const [errors, setErrors] = React.useState<{ title?: string }>({});
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!title.trim()) return;
+    const resetForm = React.useCallback(() => {
+      setTitle('');
+      setDescription('');
+      setCategory('other');
+      setStatus('todo');
+      setErrors({});
+    }, []);
 
-    onAdd({
-      title,
-      description,
-      category,
-      status,
-    });
+    const validateForm = React.useCallback((): boolean => {
+      const newErrors: { title?: string } = {};
 
-    setTitle('');
-    setDescription('');
-    setCategory('other');
-    setStatus('todo');
-    onClose();
-  };
+      if (!title.trim()) {
+        newErrors.title = 'Title is required';
+      } else if (title.trim().length < 3) {
+        newErrors.title = 'Title must be at least 3 characters';
+      }
 
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Add New Task">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            Title
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter task title"
-            className="w-full px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
-            required
-          />
-        </div>
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    }, [title]);
 
-        <div>
-          <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            Description
-          </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter task description"
-            rows={4}
-            className="w-full px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 resize-none transition-colors duration-200"
-          />
-        </div>
+    const handleSubmit = React.useCallback(
+      (e: React.FormEvent) => {
+        e.preventDefault();
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              Category
-            </label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value as TaskCategory)}
-              title="Select a category"
-              className="w-full px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
-            >
-              <option value="work" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Work</option>
-              <option value="personal" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Personal</option>
-              <option value="shopping" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Shopping</option>
-              <option value="health" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Health</option>
-              <option value="other" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Other</option>
-            </select>
+        if (!validateForm()) return;
+
+        onAdd({
+          title: title.trim(),
+          description: description.trim(),
+          category,
+          status,
+        });
+
+        resetForm();
+        onClose();
+      },
+      [title, description, category, status, validateForm, onAdd, resetForm, onClose]
+    );
+
+    const handleClose = React.useCallback(() => {
+      resetForm();
+      onClose();
+    }, [resetForm, onClose]);
+
+    return (
+      <Modal
+        ref={ref}
+        isOpen={isOpen}
+        onClose={handleClose}
+        title="Add New Task"
+        description="Create a new task by filling out the form below."
+      >
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+          <div className="space-y-2">
+            <Label htmlFor="add-task-title" required>
+              Title
+            </Label>
+            <Input
+              id="add-task-title"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter task title"
+              error={errors.title}
+              autoFocus
+              required
+              aria-required="true"
+            />
+            {errors.title && (
+              <p className="text-sm text-red-600 dark:text-red-400\" role="alert">
+                {errors.title}
+              </p>
+            )}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              Status
-            </label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as TaskStatus)}
-              title="Select a status"
-              className="w-full px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
-            >
-              <option value="todo" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">To-do</option>
-              <option value="in-progress" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">In Progress</option>
-              <option value="done" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Done</option>
-            </select>
+          <div className="space-y-2">
+            <Label htmlFor="add-task-description">Description</Label>
+            <Textarea
+              id="add-task-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter task description (optional)"
+              rows={4}
+            />
           </div>
-        </div>
 
-        <div className="flex gap-3 pt-4">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
-            Cancel
-          </Button>
-          <Button variant="primary" type="submit" className="flex-1">
-            Save Task
-          </Button>
-        </div>
-      </form>
-    </Modal>
-  );
-};
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="add-task-category">Category</Label>
+              <Select
+                id="add-task-category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value as TaskCategory)}
+              >
+                <SelectOption value="work">Work</SelectOption>
+                <SelectOption value="personal">Personal</SelectOption>
+                <SelectOption value="shopping">Shopping</SelectOption>
+                <SelectOption value="health">Health</SelectOption>
+                <SelectOption value="other">Other</SelectOption>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="add-task-status">Status</Label>
+              <Select
+                id="add-task-status"
+                value={status}
+                onChange={(e) => setStatus(e.target.value as TaskStatus)}
+              >
+                <SelectOption value="todo">To-do</SelectOption>
+                <SelectOption value="in-progress">In Progress</SelectOption>
+                <SelectOption value="done">Done</SelectOption>
+              </Select>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-800">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleClose}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" className="flex-1">
+              Add Task
+            </Button>
+          </div>
+        </form>
+      </Modal>
+    );
+  }
+);
+
+AddTaskModal.displayName = 'AddTaskModal';
+
+export { AddTaskModal };

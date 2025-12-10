@@ -6,3 +6,5 @@ export type { UseTaskFilter } from './useTaskFilter';
 
 export { useLocalStorage } from './useLocalStorage';
 export type { UseLocalStorage } from './useLocalStorage';
+
+export { useReducedMotion } from './useReducedMotion';

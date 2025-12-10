@@ -1,67 +1,98 @@
-import React from 'react';
+import * as React from 'react';
 import type { TaskStatus, TaskCategory } from '../types';
 import { SearchBar } from './SearchBar';
+import { Select, SelectOption } from './Select';
+import { Label } from './Label';
+import { Card } from './Card';
+import { cn } from '../lib/utils';
 
-interface FilterSectionProps {
+export interface FilterSectionProps {
+  /** Current search query */
   searchQuery: string;
+  /** Callback when search changes */
   onSearchChange: (query: string) => void;
+  /** Currently selected status filter */
   selectedStatus: TaskStatus | 'all';
+  /** Callback when status filter changes */
   onStatusChange: (status: TaskStatus | 'all') => void;
+  /** Currently selected category filter */
   selectedCategory: TaskCategory | 'all';
+  /** Callback when category filter changes */
   onCategoryChange: (category: TaskCategory | 'all') => void;
+  /** Additional className */
+  className?: string;
 }
 
-export const FilterSection: React.FC<FilterSectionProps> = React.memo(({
-  searchQuery,
-  onSearchChange,
-  selectedStatus,
-  onStatusChange,
-  selectedCategory,
-  onCategoryChange,
-}) => {
-  return (
-    <div className="bg-white dark:bg-neutral-900 rounded-lg border border-neutral-200 dark:border-neutral-800 p-6 space-y-4 transition-colors duration-200">
-      <SearchBar value={searchQuery} onChange={onSearchChange} />
+const FilterSection = React.forwardRef<HTMLDivElement, FilterSectionProps>(
+  (
+    {
+      searchQuery,
+      onSearchChange,
+      selectedStatus,
+      onStatusChange,
+      selectedCategory,
+      onCategoryChange,
+      className,
+    },
+    ref
+  ) => {
+    const handleClearSearch = React.useCallback(() => {
+      onSearchChange('');
+    }, [onSearchChange]);
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label htmlFor="status-filter" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            Status
-          </label>
-          <select
-            id="status-filter"
-            value={selectedStatus}
-            onChange={(e) => onStatusChange(e.target.value as TaskStatus | 'all')}
-            className="w-full px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
-          >
-            <option value="all">All Status</option>
-            <option value="todo">To-do</option>
-            <option value="in-progress">In Progress</option>
-            <option value="done">Done</option>
-          </select>
-        </div>
+    return (
+      <Card
+        ref={ref}
+        className={cn('space-y-4', className)}
+        disableAnimation
+        role="search"
+        aria-label="Filter tasks"
+      >
+        <SearchBar
+          value={searchQuery}
+          onChange={onSearchChange}
+          onClear={handleClearSearch}
+          placeholder="Search tasks by title or description..."
+        />
 
-        <div>
-          <label htmlFor="category-filter" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            Category
-          </label>
-          <select
-            id="category-filter"
-            value={selectedCategory}
-            onChange={(e) => onCategoryChange(e.target.value as TaskCategory | 'all')}
-            className="w-full px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
-          >
-            <option value="all">All Categories</option>
-            <option value="work">Work</option>
-            <option value="personal">Personal</option>
-            <option value="shopping">Shopping</option>
-            <option value="health">Health</option>
-            <option value="other">Other</option>
-          </select>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="status-filter">Status</Label>
+            <Select
+              id="status-filter"
+              value={selectedStatus}
+              onChange={(e) => onStatusChange(e.target.value as TaskStatus | 'all')}
+              aria-label="Filter by status"
+            >
+              <SelectOption value="all">All Statuses</SelectOption>
+              <SelectOption value="todo">To-do</SelectOption>
+              <SelectOption value="in-progress">In Progress</SelectOption>
+              <SelectOption value="done">Done</SelectOption>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="category-filter">Category</Label>
+            <Select
+              id="category-filter"
+              value={selectedCategory}
+              onChange={(e) => onCategoryChange(e.target.value as TaskCategory | 'all')}
+              aria-label="Filter by category"
+            >
+              <SelectOption value="all">All Categories</SelectOption>
+              <SelectOption value="work">Work</SelectOption>
+              <SelectOption value="personal">Personal</SelectOption>
+              <SelectOption value="shopping">Shopping</SelectOption>
+              <SelectOption value="health">Health</SelectOption>
+              <SelectOption value="other">Other</SelectOption>
+            </Select>
+          </div>
         </div>
-      </div>
-    </div>
-  );
-});
+      </Card>
+    );
+  }
+);
 
 FilterSection.displayName = 'FilterSection';
+
+export { FilterSection };

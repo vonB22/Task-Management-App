@@ -1,123 +1,168 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import type { Task, TaskStatus, TaskCategory } from '../types';
 import { Modal } from './Modal';
 import { Button } from './Button';
+import { Input } from './Input';
+import { Textarea } from './Textarea';
+import { Select, SelectOption } from './Select';
+import { Label } from './Label';
 
-interface EditTaskModalProps {
+export interface EditTaskModalProps {
+  /** Whether the modal is open */
   isOpen: boolean;
+  /** Task to edit (null if no task selected) */
   task: Task | null;
+  /** Callback when the modal should close */
   onClose: () => void;
+  /** Callback when task is updated */
   onEdit: (task: Task) => void;
 }
 
-export const EditTaskModal: React.FC<EditTaskModalProps> = ({ isOpen, task, onClose, onEdit }) => {
-  const [title, setTitle] = useState(task?.title || '');
-  const [description, setDescription] = useState(task?.description || '');
-  const [category, setCategory] = useState<TaskCategory>(task?.category || 'other');
-  const [status, setStatus] = useState<TaskStatus>(task?.status || 'todo');
+const EditTaskModal = React.forwardRef<HTMLDivElement, EditTaskModalProps>(
+  ({ isOpen, task, onClose, onEdit }, ref) => {
+    const [title, setTitle] = React.useState('');
+    const [description, setDescription] = React.useState('');
+    const [category, setCategory] = React.useState<TaskCategory>('other');
+    const [status, setStatus] = React.useState<TaskStatus>('todo');
+    const [errors, setErrors] = React.useState<{ title?: string }>({});
 
-  useEffect(() => {
-    if (task) {
-      setTitle(task.title);
-      setDescription(task.description);
-      setCategory(task.category);
-      setStatus(task.status);
-    }
-  }, [task]);
+    // Sync form state when task changes
+    React.useEffect(() => {
+      if (task) {
+        setTitle(task.title);
+        setDescription(task.description);
+        setCategory(task.category);
+        setStatus(task.status);
+        setErrors({});
+      }
+    }, [task]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!task || !title.trim()) return;
+    const validateForm = React.useCallback((): boolean => {
+      const newErrors: { title?: string } = {};
 
-    onEdit({
-      ...task,
-      title,
-      description,
-      category,
-      status,
-      updatedAt: new Date(),
-    });
+      if (!title.trim()) {
+        newErrors.title = 'Title is required';
+      } else if (title.trim().length < 3) {
+        newErrors.title = 'Title must be at least 3 characters';
+      }
 
-    onClose();
-  };
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    }, [title]);
 
-  if (!task) return null;
+    const handleSubmit = React.useCallback(
+      (e: React.FormEvent) => {
+        e.preventDefault();
 
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Edit Task">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            Title
-          </label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Enter task title"
-            className="w-full px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
-            required
-          />
-        </div>
+        if (!task || !validateForm()) return;
 
-        <div>
-          <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-            Description
-          </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter task description"
-            rows={4}
-            className="w-full px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 resize-none transition-colors duration-200"
-          />
-        </div>
+        onEdit({
+          ...task,
+          title: title.trim(),
+          description: description.trim(),
+          category,
+          status,
+          updatedAt: new Date(),
+        });
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              Category
-            </label>
-            <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value as TaskCategory)}
-              title="Select a category"
-              className="w-full px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
-            >
-              <option value="work" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Work</option>
-              <option value="personal" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Personal</option>
-              <option value="shopping" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Shopping</option>
-              <option value="health" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Health</option>
-              <option value="other" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Other</option>
-            </select>
+        onClose();
+      },
+      [task, title, description, category, status, validateForm, onEdit, onClose]
+    );
+
+    if (!task) return null;
+
+    return (
+      <Modal
+        ref={ref}
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Edit Task"
+        description="Update the task details below."
+      >
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+          <div className="space-y-2">
+            <Label htmlFor="edit-task-title" required>
+              Title
+            </Label>
+            <Input
+              id="edit-task-title"
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter task title"
+              error={errors.title}
+              autoFocus
+              required
+              aria-required="true"
+            />
+            {errors.title && (
+              <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+                {errors.title}
+              </p>
+            )}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-              Status
-            </label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value as TaskStatus)}
-              title="Select a status"
-              className="w-full px-4 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 transition-colors duration-200"
-            >
-              <option value="todo" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">To-do</option>
-              <option value="in-progress" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">In Progress</option>
-              <option value="done" className="bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white">Done</option>
-            </select>
+          <div className="space-y-2">
+            <Label htmlFor="edit-task-description">Description</Label>
+            <Textarea
+              id="edit-task-description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter task description (optional)"
+              rows={4}
+            />
           </div>
-        </div>
 
-        <div className="flex gap-3 pt-4">
-          <Button variant="secondary" onClick={onClose} className="flex-1">
-            Cancel
-          </Button>
-          <Button variant="primary" type="submit" className="flex-1">
-            Update Task
-          </Button>
-        </div>
-      </form>
-    </Modal>
-  );
-};
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-task-category">Category</Label>
+              <Select
+                id="edit-task-category"
+                value={category}
+                onChange={(e) => setCategory(e.target.value as TaskCategory)}
+              >
+                <SelectOption value="work">Work</SelectOption>
+                <SelectOption value="personal">Personal</SelectOption>
+                <SelectOption value="shopping">Shopping</SelectOption>
+                <SelectOption value="health">Health</SelectOption>
+                <SelectOption value="other">Other</SelectOption>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="edit-task-status">Status</Label>
+              <Select
+                id="edit-task-status"
+                value={status}
+                onChange={(e) => setStatus(e.target.value as TaskStatus)}
+              >
+                <SelectOption value="todo">To-do</SelectOption>
+                <SelectOption value="in-progress">In Progress</SelectOption>
+                <SelectOption value="done">Done</SelectOption>
+              </Select>
+            </div>
+          </div>
+
+          <div className="flex gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-800">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={onClose}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary" className="flex-1">
+              Update Task
+            </Button>
+          </div>
+        </form>
+      </Modal>
+    );
+  }
+);
+
+EditTaskModal.displayName = 'EditTaskModal';
+
+export { EditTaskModal };
