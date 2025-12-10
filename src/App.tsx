@@ -1,25 +1,33 @@
-import './App.css'
+import { useState } from 'react';
+import { Navbar } from './components/Navbar';
+import { Sidebar } from './components/Sidebar';
+import { Layout } from './components/Layout';
+import { ThemeProvider } from './context/ThemeContext';
+import { renderRoute } from './routes';
+import type { TabType } from './routes';
+
+function AppContent() {
+  const [activeTab, setActiveTab] = useState<TabType>('tasks');
+
+  return (
+    <Layout>
+      <Navbar />
+      <div className="flex min-h-screen">
+        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+        <main className="flex-1 p-8 bg-neutral-50 dark:bg-neutral-950 transition-colors duration-200">
+          {renderRoute(activeTab)}
+        </main>
+      </div>
+    </Layout>
+  );
+}
 
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-8">
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">Tailwind CSS Test</h1>
-          <p className="text-gray-600">Tailwind CSS is working!</p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-red-100 text-red-800 p-4 rounded">Red Box</div>
-            <div className="bg-blue-100 text-blue-800 p-4 rounded">Blue Box</div>
-            <div className="bg-green-100 text-green-800 p-4 rounded">Green Box</div>
-            <div className="bg-purple-100 text-purple-800 p-4 rounded">Purple Box</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
