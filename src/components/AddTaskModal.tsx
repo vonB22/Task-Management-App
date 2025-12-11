@@ -1,10 +1,10 @@
-import * as React from 'react';
+import React from 'react';
 import type { Task, TaskStatus, TaskCategory } from '../types';
 import { Modal } from './Modal';
 import { Button } from './Button';
 import { Input } from './Input';
 import { Textarea } from './Textarea';
-import { Select, SelectOption } from './Select';
+import { Select } from './Select';
 import { Label } from './Label';
 
 export interface AddTaskModalProps {
@@ -119,11 +119,11 @@ const AddTaskModal = React.forwardRef<HTMLDivElement, AddTaskModalProps>(
                 value={category}
                 onChange={(e) => setCategory(e.target.value as TaskCategory)}
               >
-                <SelectOption value="work">Work</SelectOption>
-                <SelectOption value="personal">Personal</SelectOption>
-                <SelectOption value="shopping">Shopping</SelectOption>
-                <SelectOption value="health">Health</SelectOption>
-                <SelectOption value="other">Other</SelectOption>
+                <option value="work">Work</option>
+                <option value="personal">Personal</option>
+                <option value="shopping">Shopping</option>
+                <option value="health">Health</option>
+                <option value="other">Other</option>
               </Select>
             </div>
 
@@ -134,9 +134,9 @@ const AddTaskModal = React.forwardRef<HTMLDivElement, AddTaskModalProps>(
                 value={status}
                 onChange={(e) => setStatus(e.target.value as TaskStatus)}
               >
-                <SelectOption value="todo">To-do</SelectOption>
-                <SelectOption value="in-progress">In Progress</SelectOption>
-                <SelectOption value="done">Done</SelectOption>
+                <option value="todo">To-do</option>
+                <option value="in-progress">In Progress</option>
+                <option value="done">Done</option>
               </Select>
             </div>
           </div>

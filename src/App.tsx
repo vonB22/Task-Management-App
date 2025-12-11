@@ -12,9 +12,9 @@ function AppContent() {
   return (
     <Layout>
       <Navbar />
-      <div className="flex min-h-screen">
+      <div className="flex h-[calc(100vh-73px)]">
         <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-        <main className="flex-1 p-8 bg-neutral-50 dark:bg-neutral-950 transition-colors duration-200">
+        <main className="flex-1 overflow-y-auto p-8 bg-neutral-50 dark:bg-neutral-950 transition-colors duration-200">
           {renderRoute(activeTab)}
         </main>
       </div>
