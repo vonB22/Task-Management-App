@@ -7,6 +7,7 @@ export interface UseTasks {
   updateTask: (id: string, task: Partial<Task>) => void;
   deleteTask: (id: string) => void;
   getTaskById: (id: string) => Task | undefined;
+  reorderTasks: (startIndex: number, endIndex: number) => void;
 }
 
 export const useTasks = (initialTasks: Task[]): UseTasks => {
@@ -31,5 +32,20 @@ export const useTasks = (initialTasks: Task[]): UseTasks => {
     [tasks]
   );
 
-  return { tasks, addTask, updateTask, deleteTask, getTaskById };
+  const reorderTasks = useCallback((startIndex: number, endIndex: number) => {
+    setTasks((prev) => {
+      const result = Array.from(prev);
+      const [removed] = result.splice(startIndex, 1);
+      result.splice(endIndex, 0, removed);
+      
+      // Update order property for all tasks
+      return result.map((task, index) => ({
+        ...task,
+        order: index,
+        updatedAt: new Date(),
+      }));
+    });
+  }, []);
+
+  return { tasks, addTask, updateTask, deleteTask, getTaskById, reorderTasks };
 };

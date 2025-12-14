@@ -4,28 +4,37 @@ import type { ThemeContextType } from '../types';
 export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Initialize theme on client side only
+  // Initialize state from localStorage immediately
+  const [isDarkMode, setIsDarkMode] = useState(() => {
     try {
       const savedTheme = localStorage?.getItem('theme-mode');
       const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches ?? false;
-      
       const shouldBeDark = savedTheme ? savedTheme === 'dark' : prefersDark;
-      setIsDarkMode(shouldBeDark);
       
-      // Apply theme to document
+      // Apply theme to document immediately
       const htmlElement = document.documentElement;
       if (shouldBeDark) {
         htmlElement.classList.add('dark');
       } else {
         htmlElement.classList.remove('dark');
       }
+      
+      return shouldBeDark;
     } catch (error) {
       console.error('Theme initialization error:', error);
+      return false;
     }
-  }, []);
+  });
+
+  useEffect(() => {
+    // Sync theme with document on state changes
+    const htmlElement = document.documentElement;
+    if (isDarkMode) {
+      htmlElement.classList.add('dark');
+    } else {
+      htmlElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   const toggleTheme = useCallback(() => {
     setIsDarkMode((prev) => {

@@ -15,9 +15,9 @@ interface ModalProps {
 
 const sizeClasses = {
   sm: 'max-w-sm',
-  md: 'max-w-lg',
-  lg: 'max-w-2xl',
-  xl: 'max-w-4xl',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-2xl',
   full: 'max-w-[95vw]',
 };
 
@@ -76,7 +76,7 @@ const Modal = React.memo(
               />
               <motion.div
                 ref={ref}
-                className={`relative bg-white dark:bg-neutral-900 rounded-lg shadow-xl w-full mx-4 ${sizeClasses[size]} ${className}`.trim()}
+                className={`relative bg-white dark:bg-neutral-900 rounded-lg shadow-xl w-full mx-4 max-h-[90vh] flex flex-col ${sizeClasses[size]} ${className}`.trim()}
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby={titleId}
@@ -87,9 +87,9 @@ const Modal = React.memo(
                 exit="hidden"
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
               >
-            <div className="flex items-center justify-between p-6 border-b border-neutral-200 dark:border-neutral-800">
+            <div className="flex items-center justify-between p-4 sm:p-5 border-b border-neutral-200 dark:border-neutral-800">
               <div>
-                <h2 id={titleId} className="text-xl font-semibold text-neutral-900 dark:text-white">
+                <h2 id={titleId} className="text-lg sm:text-xl font-semibold text-neutral-900 dark:text-white">
                   {title}
                 </h2>
                 {description && (
@@ -108,7 +108,7 @@ const Modal = React.memo(
                 <X size={20} className="text-neutral-900 dark:text-white" aria-hidden="true" />
               </button>
             </div>
-            <div className="p-6">{children}</div>
+            <div className="p-4 sm:p-5 overflow-y-auto flex-1">{children}</div>
               </motion.div>
             </div>
           )}

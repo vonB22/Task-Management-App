@@ -1,12 +1,11 @@
 import React from 'react';
-import type { Task, TaskStatus, TaskCategory, TaskPriority } from '../types';
+import type { Task, TaskStatus, TaskCategory } from '../types';
 import { Modal } from './Modal';
 import { Button } from './Button';
 import { Input } from './Input';
 import { Textarea } from './Textarea';
 import { Select } from './Select';
 import { Label } from './Label';
-import { DatePicker } from './DatePicker';
 
 export interface AddTaskModalProps {
   /** Whether the modal is open */
@@ -14,7 +13,7 @@ export interface AddTaskModalProps {
   /** Callback when the modal should close */
   onClose: () => void;
   /** Callback when a task is added */
-  onAdd: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt' | 'order'>) => void;
+  onAdd: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => void;
 }
 
 const AddTaskModal = React.forwardRef<HTMLDivElement, AddTaskModalProps>(
@@ -23,9 +22,6 @@ const AddTaskModal = React.forwardRef<HTMLDivElement, AddTaskModalProps>(
     const [description, setDescription] = React.useState('');
     const [category, setCategory] = React.useState<TaskCategory>('other');
     const [status, setStatus] = React.useState<TaskStatus>('todo');
-    const [priority, setPriority] = React.useState<TaskPriority>('medium');
-    const [dueDate, setDueDate] = React.useState<string | undefined>(undefined);
-    const [notes, setNotes] = React.useState('');
     const [errors, setErrors] = React.useState<{ title?: string }>({});
 
     const resetForm = React.useCallback(() => {
@@ -33,9 +29,6 @@ const AddTaskModal = React.forwardRef<HTMLDivElement, AddTaskModalProps>(
       setDescription('');
       setCategory('other');
       setStatus('todo');
-      setPriority('medium');
-      setDueDate(undefined);
-      setNotes('');
       setErrors({});
     }, []);
 
@@ -63,16 +56,14 @@ const AddTaskModal = React.forwardRef<HTMLDivElement, AddTaskModalProps>(
           description: description.trim(),
           category,
           status,
-          priority,
-          dueDate,
-          notes: notes.trim() || undefined,
-          attachments: [],
+          priority: 'none',
+          order: 0,
         });
 
         resetForm();
         onClose();
       },
-      [title, description, category, status, priority, dueDate, notes, validateForm, onAdd, resetForm, onClose]
+      [title, description, category, status, validateForm, onAdd, resetForm, onClose]
     );
 
     const handleClose = React.useCallback(() => {
@@ -87,9 +78,8 @@ const AddTaskModal = React.forwardRef<HTMLDivElement, AddTaskModalProps>(
         onClose={handleClose}
         title="Add New Task"
         description="Create a new task by filling out the form below."
-        size="md"
       >
-        <form onSubmit={handleSubmit} className="space-y-3" noValidate>
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div className="space-y-2">
             <Label htmlFor="add-task-title" required>
               Title
@@ -119,7 +109,7 @@ const AddTaskModal = React.forwardRef<HTMLDivElement, AddTaskModalProps>(
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter task description (optional)"
-              rows={3}
+              rows={4}
             />
           </div>
 
@@ -153,52 +143,16 @@ const AddTaskModal = React.forwardRef<HTMLDivElement, AddTaskModalProps>(
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="add-task-priority">Priority</Label>
-              <Select
-                id="add-task-priority"
-                value={priority}
-                onChange={(e) => setPriority(e.target.value as TaskPriority)}
-              >
-                <option value="none">None</option>
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <DatePicker
-                label="Due Date"
-                value={dueDate}
-                onChange={setDueDate}
-                placeholder="Select due date"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="add-task-notes">Notes</Label>
-            <Textarea
-              id="add-task-notes"
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Additional notes (optional)"
-              rows={2}
-            />
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-3 border-t border-neutral-200 dark:border-neutral-800">
+          <div className="flex gap-3 pt-4 border-t border-neutral-200 dark:border-neutral-800">
             <Button
               type="button"
               variant="secondary"
               onClick={handleClose}
-              className="flex-1 order-2 sm:order-1"
+              className="flex-1"
             >
               Cancel
             </Button>
-            <Button type="submit" variant="primary" className="flex-1 order-1 sm:order-2">
+            <Button type="submit" variant="primary" className="flex-1">
               Add Task
             </Button>
           </div>

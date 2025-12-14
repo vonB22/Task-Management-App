@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { Calendar, Clock } from 'lucide-react';
+import { Calendar, Clock, AlertCircle, FileText } from 'lucide-react';
 import type { Task } from '../types';
 import { Modal } from './Modal';
 import { Badge } from './Badge';
 import { CategoryTag } from './CategoryTag';
+import { PriorityBadge } from './PriorityBadge';
 import { Button } from './Button';
 import { formatDate } from '../lib/utils';
 
@@ -25,6 +26,22 @@ const ViewTaskModal = React.forwardRef<HTMLDivElement, ViewTaskModalProps>(
     const createdDate = formatDate(task.createdAt);
     const updatedDate = formatDate(task.updatedAt);
     const wasUpdated = task.createdAt.toString() !== task.updatedAt.toString();
+    
+    const formatDueDate = (dateString?: string) => {
+      if (!dateString) return null;
+      const date = new Date(dateString);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const dueDate = new Date(date);
+      dueDate.setHours(0, 0, 0, 0);
+      
+      const isOverdue = dueDate < today && task.status !== 'done';
+      const isToday = dueDate.getTime() === today.getTime();
+      
+      return { date, isOverdue, isToday };
+    };
+    
+    const dueDateInfo = formatDueDate(task.dueDate);
 
     return (
       <Modal
@@ -43,6 +60,9 @@ const ViewTaskModal = React.forwardRef<HTMLDivElement, ViewTaskModalProps>(
             <div className="flex flex-wrap items-center gap-2">
               <Badge status={task.status} />
               <CategoryTag category={task.category} />
+              {task.priority && task.priority !== 'none' && (
+                <PriorityBadge priority={task.priority} />
+              )}
             </div>
           </div>
 
@@ -54,6 +74,19 @@ const ViewTaskModal = React.forwardRef<HTMLDivElement, ViewTaskModalProps>(
               </h4>
               <p className="text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap">
                 {task.description}
+              </p>
+            </div>
+          )}
+
+          {/* Notes */}
+          {task.notes && (
+            <div className="space-y-2">
+              <h4 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 flex items-center gap-2">
+                <FileText size={16} />
+                Notes
+              </h4>
+              <p className="text-neutral-600 dark:text-neutral-400 whitespace-pre-wrap">
+                {task.notes}
               </p>
             </div>
           )}
@@ -89,6 +122,26 @@ const ViewTaskModal = React.forwardRef<HTMLDivElement, ViewTaskModalProps>(
                   </p>
                   <p className="text-sm font-medium text-neutral-900 dark:text-white">
                     {updatedDate}
+                  </p>
+                </div>
+              </div>
+            )}
+            
+            {dueDateInfo && (
+              <div className="flex items-start gap-3">
+                <AlertCircle
+                  size={18}
+                  className={`mt-0.5 shrink-0 ${dueDateInfo.isOverdue ? 'text-red-600 dark:text-red-400' : dueDateInfo.isToday ? 'text-orange-600 dark:text-orange-400' : 'text-neutral-500 dark:text-neutral-400'}`}
+                  aria-hidden="true"
+                />
+                <div>
+                  <p className="text-xs text-neutral-500 dark:text-neutral-400">
+                    Due Date
+                  </p>
+                  <p className={`text-sm font-medium ${dueDateInfo.isOverdue ? 'text-red-600 dark:text-red-400' : dueDateInfo.isToday ? 'text-orange-600 dark:text-orange-400' : 'text-neutral-900 dark:text-white'}`}>
+                    {formatDate(dueDateInfo.date)}
+                    {dueDateInfo.isOverdue && ' (Overdue)'}
+                    {dueDateInfo.isToday && ' (Today)'}
                   </p>
                 </div>
               </div>

@@ -2,8 +2,9 @@ import type { ReactNode } from 'react';
 import { TasksPage } from '../pages/TasksPage';
 import { CategoriesPage } from '../pages/CategoriesPage';
 import { SettingsPage } from '../pages/SettingsPage';
+import { ProfilePage } from '../pages/ProfilePage';
 
-export type TabType = 'tasks' | 'categories' | 'settings';
+export type TabType = 'tasks' | 'categories' | 'settings' | 'profile';
 
 export interface Route {
   id: TabType;
@@ -16,6 +17,7 @@ export const getRoutes = (): Record<TabType, ReactNode> => {
     tasks: <TasksPage />,
     categories: <CategoriesPage />,
     settings: <SettingsPage />,
+    profile: <ProfilePage />,
   };
 };
 
@@ -24,6 +26,7 @@ export const getRouteLabel = (tab: TabType): string => {
     tasks: 'Tasks',
     categories: 'Categories',
     settings: 'Settings',
+    profile: 'Profile',
   };
   return labels[tab];
 };

@@ -1,5 +1,5 @@
 import React from 'react';
-import type { TaskStatus, TaskCategory } from '../types';
+import type { TaskStatus, TaskCategory, TaskPriority } from '../types';
 import { SearchBar } from './SearchBar';
 import { Select } from './Select';
 import { Label } from './Label';
@@ -12,6 +12,8 @@ interface FilterSectionProps {
   onStatusChange: (status: TaskStatus | 'all') => void;
   selectedCategory: TaskCategory | 'all';
   onCategoryChange: (category: TaskCategory | 'all') => void;
+  selectedPriority?: TaskPriority | 'all';
+  onPriorityChange?: (priority: TaskPriority | 'all') => void;
   className?: string;
 }
 
@@ -25,6 +27,8 @@ const FilterSection = React.memo(
         onStatusChange,
         selectedCategory,
         onCategoryChange,
+        selectedPriority = 'all',
+        onPriorityChange,
         className = '',
       },
       ref
@@ -47,7 +51,7 @@ const FilterSection = React.memo(
             placeholder="Search tasks by title or description..."
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="status-filter">Status</Label>
               <Select
@@ -77,6 +81,22 @@ const FilterSection = React.memo(
                 <option value="shopping">Shopping</option>
                 <option value="health">Health</option>
                 <option value="other">Other</option>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="priority-filter">Priority</Label>
+              <Select
+                id="priority-filter"
+                value={selectedPriority}
+                onChange={(e) => onPriorityChange?.(e.target.value as TaskPriority | 'all')}
+                aria-label="Filter by priority"
+              >
+                <option value="all">All Priorities</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+                <option value="none">None</option>
               </Select>
             </div>
           </div>
