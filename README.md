@@ -1,73 +1,92 @@
-# React + TypeScript + Vite
+# TaskFlow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, feature-rich task management application built with React, TypeScript, and Tailwind CSS. Organize your tasks efficiently with categories, status tracking, and a beautiful dark mode.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- ✅ **Create, Read, Update, Delete Tasks** - Full CRUD functionality
+- 📂 **Category Management** - Organize tasks by custom categories
+- 🏷️ **Status Tracking** - Track task progress (Todo, In Progress, Done)
+- 🔍 **Search & Filter** - Find tasks quickly by title or category
+- 🌙 **Dark/Light Mode** - Switch themes seamlessly
+- ✨ **Smooth Animations** - Delightful UI with framer-motion
+- 📱 **Responsive Design** - Works on desktop, tablet, and mobile
+- 💾 **Local Storage** - Tasks persist across sessions
+- ♿ **Accessible** - Built with accessibility best practices
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React 19.2.0 with TypeScript 5.9.3
+- **Build Tool**: Vite 7.2.2
+- **Styling**: Tailwind CSS 3.4.18
+- **Animations**: Framer Motion 7.x
+- **Icons**: Lucide React
+- **State Management**: React Context API + Custom Hooks
+- **Storage**: LocalStorage API
 
-## Expanding the ESLint configuration
+## Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
+- Node.js 18+
+- npm or yarn
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+```bash
+# Clone the repository
+git clone https://github.com/vonB22/Task-Management-App.git
+cd Task-Management-App
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The app will be available at `http://localhost:5173`
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Project Structure
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+src/
+├── components/       # Reusable UI components
+├── pages/           # Page components
+├── context/         # React Context (Theme, etc.)
+├── hooks/           # Custom hooks (useTasks, useLocalStorage, etc.)
+├── lib/             # Utilities and animations
+├── types/           # TypeScript type definitions
+└── assets/          # Static assets
+```
+
+## Demo
+
+<p align="center">
+  <img src="src/assets/gif/taskflow.gif" alt="TaskFlow Demo" width="950">
+</p>
+
+## Key Components
+
+- **TaskCard** - Individual task display with actions
+- **Modal** - Dialog for adding and editing tasks
+- **Sidebar** - Navigation with smooth animations
+- **FilterSection** - Search and filter controls
+- **Navbar** - Top navigation with theme toggle
+
+## Performance
+
+- React.memo optimization throughout
+- Memoized callbacks with useCallback
+- Computed values with useMemo
+- Efficient re-render strategy
+
+## Deployment
+
+The project is configured for Vercel deployment. Push to GitHub and connect your repository to Vercel for automatic deployments.
+
+## License
+
+MIT License - feel free to use this project for personal or commercial purposes.
