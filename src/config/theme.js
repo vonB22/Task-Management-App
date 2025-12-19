@@ -1,4 +1,4 @@
-// Warm Theme Configuration for TaskFlow Pro
+// Warm Theme Configuration for Taskler
 
 export const warmTheme = {
   colors: {

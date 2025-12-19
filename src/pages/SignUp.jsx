@@ -118,12 +118,12 @@ const SignUp = () => {
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-6">
             <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
-              <span className="text-white font-bold text-xl">TF</span>
+              <span className="text-white font-bold text-xl">TK</span>
             </div>
-            <span className="text-2xl font-bold text-amber-950 dark:text-dark-text">TaskFlow Pro</span>
+            <span className="text-2xl font-bold text-amber-950 dark:text-dark-text">Taskler</span>
           </Link>
           <h1 className="text-3xl font-bold text-amber-950 dark:text-dark-text mb-2">Create Account</h1>
-          <p className="text-amber-600 dark:text-dark-muted">Join TaskFlow Pro today</p>
+          <p className="text-amber-600 dark:text-dark-muted">Join Taskler today</p>
         </div>
 
         {/* Sign Up Form */}

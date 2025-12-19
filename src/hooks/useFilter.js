@@ -22,12 +22,22 @@ export const useFilter = () => {
   // Filter tasks based on current filters
   const filterTasks = useCallback((tasks) => {
     return tasks.filter(task => {
+      // Search filter - handle undefined description
       const matchesSearch = searchTerm === '' || 
-        task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        task.description.toLowerCase().includes(searchTerm.toLowerCase());
+        task.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (task.description && task.description.toLowerCase().includes(searchTerm.toLowerCase()));
       
-      const matchesPriority = !priorityFilter || task.priority === priorityFilter;
-      const matchesStatus = !statusFilter || task.status === statusFilter;
+      // Priority filter - handle case variations (low, Low, medium, Medium, high, High)
+      const matchesPriority = !priorityFilter || 
+        task.priority?.toLowerCase() === priorityFilter.toLowerCase();
+      
+      // Status filter - handle case variations and different formats
+      const matchesStatus = !statusFilter || 
+        task.status === statusFilter ||
+        task.status?.toLowerCase() === statusFilter.toLowerCase() ||
+        (statusFilter === 'todo' && (task.status === 'Backlog' || task.status === 'backlog')) ||
+        (statusFilter === 'inProgress' && task.status === 'In Progress') ||
+        (statusFilter === 'done' && task.status === 'Done');
       
       return matchesSearch && matchesPriority && matchesStatus;
     });

@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
  * Toast Notification Component
  */
 const Toast = ({ 
+  title,
   message, 
   type = 'success', 
-  duration = 3000, 
+  duration = 5000, 
   onClose 
 }) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -63,23 +64,30 @@ const Toast = ({
 
   return (
     <div
-      className={`fixed top-4 right-4 z-50 transition-all duration-300 ${
+      className={`transition-all duration-300 ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2'
       }`}
     >
-      <div className={`flex items-center gap-3 p-4 rounded-lg border-l-4 shadow-lg ${currentType.bg}`}>
-        <div className="flex-shrink-0">
+      <div className={`flex items-start gap-3 p-4 rounded-lg border-l-4 shadow-lg min-w-[300px] max-w-md ${currentType.bg}`}>
+        <div className="flex-shrink-0 mt-0.5">
           {currentType.icon}
         </div>
-        <p className={`text-sm font-medium ${currentType.text}`}>
-          {message}
-        </p>
+        <div className="flex-1">
+          {title && (
+            <p className={`text-sm font-semibold mb-1 ${currentType.text}`}>
+              {title}
+            </p>
+          )}
+          <p className={`text-sm ${currentType.text}`}>
+            {message}
+          </p>
+        </div>
         <button
           onClick={() => {
             setIsVisible(false);
             setTimeout(onClose, 300);
           }}
-          className={`ml-4 flex-shrink-0 ${currentType.text} hover:opacity-75`}
+          className={`flex-shrink-0 ${currentType.text} hover:opacity-75`}
         >
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
@@ -95,15 +103,17 @@ const Toast = ({
  */
 export const ToastContainer = ({ toasts, removeToast }) => {
   return (
-    <div className="fixed top-4 right-4 z-50 space-y-2">
+    <div className="fixed top-4 right-4 z-50 space-y-2 pointer-events-none">
       {toasts.map((toast) => (
-        <Toast
-          key={toast.id}
-          message={toast.message}
-          type={toast.type}
-          duration={toast.duration}
-          onClose={() => removeToast(toast.id)}
-        />
+        <div key={toast.id} className="pointer-events-auto">
+          <Toast
+            title={toast.title}
+            message={toast.message}
+            type={toast.type}
+            duration={toast.duration || 5000}
+            onClose={() => removeToast(toast.id)}
+          />
+        </div>
       ))}
     </div>
   );

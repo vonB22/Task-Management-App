@@ -73,7 +73,7 @@ const Sidebar = ({ isOpen, onToggle }) => {
             className="flex items-center gap-2"
           >
             <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">TF</span>
+              <span className="text-white font-bold text-sm">TK</span>
             </div>
             <motion.span 
               initial={{ x: -10, opacity: 0 }}
@@ -81,12 +81,12 @@ const Sidebar = ({ isOpen, onToggle }) => {
               transition={{ delay: 0.3 }}
               className="text-xl font-bold text-amber-950"
             >
-              TaskFlow Pro
+              Taskler
             </motion.span>
           </motion.div>
         ) : (
           <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center mx-auto">
-            <span className="text-white font-bold text-sm">TF</span>
+            <span className="text-white font-bold text-sm">TK</span>
           </div>
         )}
       </div>

@@ -26,7 +26,7 @@ const DEFAULT_USER = {
   email: 'demo@taskflow.com',
   role: ROLES.TEAM_MEMBER,
   avatar: null,
-  bio: 'Welcome to TaskFlow Pro!',
+  bio: 'Welcome to Taskler!',
   preferences: {
     theme: 'warm',
     notificationSound: true,

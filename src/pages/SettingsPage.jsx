@@ -30,7 +30,7 @@ const SettingsPage = () => {
         transition={{ duration: 0.3 }}
       >
         <h1 className="text-3xl font-bold text-amber-950">Settings</h1>
-        <p className="text-amber-600 mt-1">Customize your TaskFlow Pro experience</p>
+        <p className="text-amber-600 mt-1">Customize your Taskler experience</p>
       </motion.div>
 
       {/* Settings Container */}

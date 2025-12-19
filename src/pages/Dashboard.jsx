@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useRBAC } from '../hooks/useRBAC';
+import { useNotifications } from '../contexts/NotificationContext';
 import StatusColumn from '../components/task/StatusColumn';
 import TaskForm from '../components/task/TaskForm';
 import TaskFilters from '../components/task/TaskFilters';
@@ -16,6 +17,7 @@ import { useFilter } from '../hooks/useFilter';
 const Dashboard = () => {
   const { user } = useAuth();
   const { canCreateTask } = useRBAC();
+  const { showToast } = useNotifications();
   
   // State management
   const [tasks, setTasks] = useLocalStorage('tasks', []);
@@ -50,6 +52,11 @@ const Dashboard = () => {
     };
     setTasks([...tasks, task]);
     setIsCreateModalOpen(false);
+    showToast({
+      title: 'Task Created',
+      message: `"${task.title}" has been created successfully`,
+      type: 'success'
+    });
   };
 
   const handleUpdateTask = (updatedTask) => {
@@ -58,18 +65,43 @@ const Dashboard = () => {
     ));
     setEditingTask(null);
     setIsEditModalOpen(false);
+    showToast({
+      title: 'Task Updated',
+      message: `"${updatedTask.title}" has been updated successfully`,
+      type: 'success'
+    });
   };
 
   const handleDeleteTask = (taskId) => {
     if (window.confirm('Are you sure you want to delete this task?')) {
+      const deletedTask = tasks.find(task => task.id === taskId);
       setTasks(tasks.filter(task => task.id !== taskId));
+      showToast({
+        title: 'Task Deleted',
+        message: `"${deletedTask?.title || 'Task'}" has been deleted`,
+        type: 'success'
+      });
     }
   };
 
   const handleStatusChange = (taskId, newStatus) => {
+    const updatedTask = tasks.find(task => task.id === taskId);
     setTasks(tasks.map(task =>
       task.id === taskId ? { ...task, status: newStatus } : task
     ));
+    const statusLabels = { 
+      todo: 'To Do', 
+      Backlog: 'Backlog',
+      inProgress: 'In Progress', 
+      'In Progress': 'In Progress',
+      done: 'Done',
+      Done: 'Done'
+    };
+    showToast({
+      title: '✓ Task Moved',
+      message: `"${updatedTask?.title}" moved to ${statusLabels[newStatus] || newStatus}`,
+      type: 'success'
+    });
   };
 
   const handleEditTask = (task) => {

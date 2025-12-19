@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import NotificationCenter from './NotificationCenter';
+import { ToastContainer } from '../ui/Toast';
+import { useNotifications } from '../../contexts/NotificationContext';
 
 /**
  * Main Layout Component
@@ -12,6 +14,7 @@ import NotificationCenter from './NotificationCenter';
 const Layout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const { toasts, removeToast } = useNotifications();
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -73,6 +76,9 @@ const Layout = () => {
           </>
         )}
       </AnimatePresence>
+
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} removeToast={removeToast} />
     </div>
   );
 };

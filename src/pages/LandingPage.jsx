@@ -15,9 +15,9 @@ const LandingPage = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">TF</span>
+                <span className="text-white font-bold text-sm">TK</span>
               </div>
-              <span className="text-xl font-bold text-amber-950">TaskFlow Pro</span>
+              <span className="text-xl font-bold text-amber-950">Taskler</span>
             </div>
             <div className="flex items-center gap-3">
               <Link
@@ -53,7 +53,7 @@ const LandingPage = () => {
             className="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 rounded-full mb-6"
           >
             <span className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></span>
-            <span className="text-sm font-medium text-orange-700">Welcome to TaskFlow Pro v2</span>
+            <span className="text-sm font-medium text-orange-700">Welcome to Taskler v2</span>
           </motion.div>
 
           {/* Main Heading */}
@@ -156,7 +156,7 @@ const LandingPage = () => {
       <footer className="border-t border-amber-200 bg-white/80 backdrop-blur-md">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center text-amber-700">
-            <p className="text-sm">© 2024 TaskFlow Pro. Built with React, Vite, and Framer Motion.</p>
+            <p className="text-sm">© 2024 Taskler. Built with React, Vite, and Framer Motion.</p>
           </div>
         </div>
       </footer>

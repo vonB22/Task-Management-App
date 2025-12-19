@@ -8,7 +8,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { router } from './router/routes';
 
 /**
- * App Component - TaskFlow Pro v2.1
+ * App Component - Taskler v2.1
  * Main application with React Router and Context Providers
  */
 function App() {

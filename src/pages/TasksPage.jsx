@@ -5,6 +5,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useFilter } from '../hooks/useFilter';
 import { useAuth } from '../contexts/AuthContext';
 import { useRBAC } from '../hooks/useRBAC';
+import { useNotifications } from '../contexts/NotificationContext';
 import TaskForm from '../components/task/TaskForm';
 import TaskFilters from '../components/task/TaskFilters';
 import Modal from '../components/ui/Modal';
@@ -17,6 +18,7 @@ import Badge from '../components/ui/Badge';
 const TasksPage = () => {
   const { user } = useAuth();
   const { canCreateTask, canEditTask, canDeleteTask } = useRBAC();
+  const { showToast } = useNotifications();
   
   const [tasks, setTasks] = useLocalStorage('tasks', []);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -49,6 +51,11 @@ const TasksPage = () => {
     };
     setTasks([...tasks, task]);
     setIsCreateModalOpen(false);
+    showToast({
+      title: 'Task Created',
+      message: `"${task.title}" has been created successfully`,
+      type: 'success'
+    });
   };
 
   const handleUpdateTask = (updatedTask) => {
@@ -57,11 +64,22 @@ const TasksPage = () => {
     ));
     setEditingTask(null);
     setIsEditModalOpen(false);
+    showToast({
+      title: 'Task Updated',
+      message: `"${updatedTask.title}" has been updated successfully`,
+      type: 'success'
+    });
   };
 
   const handleDeleteTask = (taskId) => {
     if (window.confirm('Are you sure you want to delete this task?')) {
+      const deletedTask = tasks.find(task => task.id === taskId);
       setTasks(tasks.filter(task => task.id !== taskId));
+      showToast({
+        title: 'Task Deleted',
+        message: `"${deletedTask?.title || 'Task'}" has been deleted`,
+        type: 'success'
+      });
     }
   };
 
