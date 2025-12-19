@@ -122,7 +122,7 @@ const SignIn = () => {
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-amber-700 dark:text-dark-text mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-amber-900 dark:text-dark-text mb-2">
                 Email Address
               </label>
               <input
@@ -131,7 +131,7 @@ const SignIn = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 rounded-lg border ${
+                className={`w-full px-4 py-3 rounded-lg border bg-white text-amber-950 ${
                   errors.email
                     ? 'border-red-300 focus:ring-red-500'
                     : 'border-amber-200 dark:border-dark-border focus:ring-orange-500'
@@ -143,7 +143,7 @@ const SignIn = () => {
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-amber-700 dark:text-dark-text mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-amber-900 dark:text-dark-text mb-2">
                 Password
               </label>
               <input
@@ -152,7 +152,7 @@ const SignIn = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 rounded-lg border ${
+                className={`w-full px-4 py-3 rounded-lg border bg-white text-amber-950 ${
                   errors.password
                     ? 'border-red-300 focus:ring-red-500'
                     : 'border-amber-200 dark:border-dark-border focus:ring-orange-500'
