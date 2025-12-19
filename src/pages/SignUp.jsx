@@ -107,7 +107,13 @@ const SignUp = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 dark:from-dark-bg dark:via-dark-surface dark:to-dark-bg flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 right-10 w-72 h-72 bg-orange-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+        <div className="absolute top-40 left-10 w-72 h-72 bg-yellow-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-amber-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
+      </div>
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -120,10 +126,10 @@ const SignUp = () => {
             <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-xl">TK</span>
             </div>
-            <span className="text-2xl font-bold text-amber-950 dark:text-dark-text">Taskler</span>
+            <span className="text-2xl font-bold text-amber-950">Taskler</span>
           </Link>
-          <h1 className="text-3xl font-bold text-amber-950 dark:text-dark-text mb-2">Create Account</h1>
-          <p className="text-amber-600 dark:text-dark-muted">Join Taskler today</p>
+          <h1 className="text-3xl font-bold text-amber-950 mb-2">Create Account</h1>
+          <p className="text-amber-600">Join Taskler today</p>
         </div>
 
         {/* Sign Up Form */}
@@ -131,19 +137,19 @@ const SignUp = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1, duration: 0.3 }}
-          className="bg-white dark:bg-dark-surface rounded-xl shadow-lg border border-amber-200 dark:border-dark-border p-8"
+          className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg border border-amber-200 p-8 relative z-10"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* General Error */}
             {errors.general && (
-              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
                 {errors.general}
               </div>
             )}
 
             {/* Name */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-amber-700 dark:text-dark-text mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-amber-900 mb-2">
                 Full Name
               </label>
               <input
@@ -152,19 +158,19 @@ const SignUp = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 rounded-lg border ${
+                className={`w-full px-4 py-3 rounded-lg border bg-white text-amber-950 ${
                   errors.name
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-amber-200 dark:border-dark-border focus:ring-orange-500'
-                } dark:bg-dark-bg dark:text-dark-text focus:outline-none focus:ring-2 transition-all`}
+                    : 'border-amber-200 focus:ring-orange-500'
+                } focus:outline-none focus:ring-2 transition-all`}
                 placeholder="John Doe"
               />
-              {errors.name && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>}
+              {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
             </div>
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-amber-700 dark:text-dark-text mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-amber-900 mb-2">
                 Email Address
               </label>
               <input
@@ -173,19 +179,19 @@ const SignUp = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 rounded-lg border ${
+                className={`w-full px-4 py-3 rounded-lg border bg-white text-amber-950 ${
                   errors.email
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-amber-200 dark:border-dark-border focus:ring-orange-500'
-                } dark:bg-dark-bg dark:text-dark-text focus:outline-none focus:ring-2 transition-all`}
+                    : 'border-amber-200 focus:ring-orange-500'
+                } focus:outline-none focus:ring-2 transition-all`}
                 placeholder="you@example.com"
               />
-              {errors.email && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>}
+              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
             </div>
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-amber-700 dark:text-dark-text mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-amber-900 mb-2">
                 Password
               </label>
               <input
@@ -194,19 +200,19 @@ const SignUp = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 rounded-lg border ${
+                className={`w-full px-4 py-3 rounded-lg border bg-white text-amber-950 ${
                   errors.password
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-amber-200 dark:border-dark-border focus:ring-orange-500'
-                } dark:bg-dark-bg dark:text-dark-text focus:outline-none focus:ring-2 transition-all`}
+                    : 'border-amber-200 focus:ring-orange-500'
+                } focus:outline-none focus:ring-2 transition-all`}
                 placeholder="••••••••"
               />
-              {errors.password && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password}</p>}
+              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
             </div>
 
             {/* Confirm Password */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-amber-700 dark:text-dark-text mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-amber-900 mb-2">
                 Confirm Password
               </label>
               <input
@@ -215,22 +221,22 @@ const SignUp = () => {
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className={`w-full px-4 py-3 rounded-lg border ${
+                className={`w-full px-4 py-3 rounded-lg border bg-white text-amber-950 ${
                   errors.confirmPassword
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-amber-200 dark:border-dark-border focus:ring-orange-500'
-                } dark:bg-dark-bg dark:text-dark-text focus:outline-none focus:ring-2 transition-all`}
+                    : 'border-amber-200 focus:ring-orange-500'
+                } focus:outline-none focus:ring-2 transition-all`}
                 placeholder="••••••••"
               />
               {errors.confirmPassword && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.confirmPassword}</p>
+                <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>
               )}
             </div>
 
             {/* Role Selection */}
             <div>
-              <label className="block text-sm font-medium text-amber-700 dark:text-dark-text mb-3">
-                Select Role <span className="text-xs text-amber-500 dark:text-dark-muted">(For demo purposes)</span>
+              <label className="block text-sm font-medium text-amber-900 mb-3">
+                Select Role <span className="text-xs text-amber-500">(For demo purposes)</span>
               </label>
               <div className="grid grid-cols-2 gap-3">
                 {roles.map((role) => (
@@ -238,8 +244,8 @@ const SignUp = () => {
                     key={role.value}
                     className={`relative flex flex-col p-3 border-2 rounded-lg cursor-pointer transition-all ${
                       formData.role === role.value
-                        ? 'border-orange-500 bg-orange-50 dark:bg-orange-900/20'
-                        : 'border-amber-200 dark:border-dark-border hover:border-orange-300 dark:hover:border-orange-700'
+                        ? 'border-orange-500 bg-orange-50'
+                        : 'border-amber-200 hover:border-orange-300'
                     }`}
                   >
                     <input
@@ -250,8 +256,8 @@ const SignUp = () => {
                       onChange={handleChange}
                       className="sr-only"
                     />
-                    <span className="text-sm font-semibold text-amber-950 dark:text-dark-text">{role.label}</span>
-                    <span className="text-xs text-amber-600 dark:text-dark-muted">{role.description}</span>
+                    <span className="text-sm font-semibold text-amber-950">{role.label}</span>
+                    <span className="text-xs text-amber-600">{role.description}</span>
                   </label>
                 ))}
               </div>
@@ -268,9 +274,9 @@ const SignUp = () => {
           </form>
 
           {/* Sign In Link */}
-          <p className="mt-6 text-center text-sm text-amber-600 dark:text-dark-muted">
+          <p className="mt-6 text-center text-sm text-amber-600">
             Already have an account?{' '}
-            <Link to="/signin" className="text-orange-600 dark:text-orange-400 font-semibold hover:underline">
+            <Link to="/signin" className="text-orange-600 font-semibold hover:underline">
               Sign in
             </Link>
           </p>
@@ -278,7 +284,7 @@ const SignUp = () => {
 
         {/* Back to Home */}
         <div className="mt-6 text-center">
-          <Link to="/" className="text-sm text-amber-600 dark:text-dark-muted hover:text-orange-600 dark:hover:text-orange-400">
+          <Link to="/" className="text-sm text-amber-600 hover:text-orange-600">
             ← Back to Home
           </Link>
         </div>
