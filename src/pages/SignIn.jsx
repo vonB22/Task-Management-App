@@ -86,7 +86,7 @@ const SignIn = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-dark-bg dark:via-dark-surface dark:to-dark-bg flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 flex items-center justify-center p-4">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -99,10 +99,10 @@ const SignIn = () => {
             <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
               <span className="text-white font-bold text-xl">TK</span>
             </div>
-            <span className="text-2xl font-bold text-amber-950 dark:text-dark-text">Taskler</span>
+            <span className="text-2xl font-bold text-amber-950">Taskler</span>
           </Link>
-          <h1 className="text-3xl font-bold text-amber-950 dark:text-dark-text mb-2">Welcome Back</h1>
-          <p className="text-amber-600 dark:text-dark-muted">Sign in to your account</p>
+          <h1 className="text-3xl font-bold text-amber-950 mb-2">Welcome Back</h1>
+          <p className="text-amber-600">Sign in to your account</p>
         </div>
 
         {/* Sign In Form */}
@@ -110,19 +110,19 @@ const SignIn = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1, duration: 0.3 }}
-          className="bg-white dark:bg-dark-surface rounded-xl shadow-lg border border-amber-200 dark:border-dark-border p-8"
+          className="bg-white rounded-xl shadow-lg border border-amber-200 p-8"
         >
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* General Error */}
             {errors.general && (
-              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-600 dark:text-red-400">
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-600">
                 {errors.general}
               </div>
             )}
 
             {/* Email */}
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-amber-900 dark:text-dark-text mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-amber-900 mb-2">
                 Email Address
               </label>
               <input
@@ -134,16 +134,16 @@ const SignIn = () => {
                 className={`w-full px-4 py-3 rounded-lg border bg-white text-amber-950 ${
                   errors.email
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-amber-200 dark:border-dark-border focus:ring-orange-500'
-                } dark:bg-dark-bg dark:text-dark-text focus:outline-none focus:ring-2 transition-all`}
+                    : 'border-amber-200 focus:ring-orange-500'
+                } focus:outline-none focus:ring-2 transition-all`}
                 placeholder="you@example.com"
               />
-              {errors.email && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.email}</p>}
+              {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
             </div>
 
             {/* Password */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-amber-900 dark:text-dark-text mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-amber-900 mb-2">
                 Password
               </label>
               <input
@@ -155,11 +155,11 @@ const SignIn = () => {
                 className={`w-full px-4 py-3 rounded-lg border bg-white text-amber-950 ${
                   errors.password
                     ? 'border-red-300 focus:ring-red-500'
-                    : 'border-amber-200 dark:border-dark-border focus:ring-orange-500'
-                } dark:bg-dark-bg dark:text-dark-text focus:outline-none focus:ring-2 transition-all`}
+                    : 'border-amber-200 focus:ring-orange-500'
+                } focus:outline-none focus:ring-2 transition-all`}
                 placeholder="••••••••"
               />
-              {errors.password && <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.password}</p>}
+              {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
             </div>
 
             {/* Submit Button */}
@@ -173,30 +173,30 @@ const SignIn = () => {
           </form>
 
           {/* Demo Logins */}
-          <div className="mt-6 pt-6 border-t border-amber-200 dark:border-dark-border">
-            <p className="text-sm text-amber-600 dark:text-dark-muted mb-3 text-center">Quick Demo Access:</p>
+          <div className="mt-6 pt-6 border-t border-amber-200">
+            <p className="text-sm text-amber-600 mb-3 text-center">Quick Demo Access:</p>
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => handleDemoLogin('Admin')}
-                className="px-3 py-2 text-sm bg-amber-100 dark:bg-dark-bg text-amber-700 dark:text-dark-text rounded-lg hover:bg-amber-200 dark:hover:bg-dark-border transition-all"
+                className="px-3 py-2 text-sm bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all"
               >
                 Admin
               </button>
               <button
                 onClick={() => handleDemoLogin('Manager')}
-                className="px-3 py-2 text-sm bg-amber-100 dark:bg-dark-bg text-amber-700 dark:text-dark-text rounded-lg hover:bg-amber-200 dark:hover:bg-dark-border transition-all"
+                className="px-3 py-2 text-sm bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all"
               >
                 Manager
               </button>
               <button
                 onClick={() => handleDemoLogin('TeamMember')}
-                className="px-3 py-2 text-sm bg-amber-100 dark:bg-dark-bg text-amber-700 dark:text-dark-text rounded-lg hover:bg-amber-200 dark:hover:bg-dark-border transition-all"
+                className="px-3 py-2 text-sm bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all"
               >
                 Team Member
               </button>
               <button
                 onClick={() => handleDemoLogin('Viewer')}
-                className="px-3 py-2 text-sm bg-amber-100 dark:bg-dark-bg text-amber-700 dark:text-dark-text rounded-lg hover:bg-amber-200 dark:hover:bg-dark-border transition-all"
+                className="px-3 py-2 text-sm bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 transition-all"
               >
                 Viewer
               </button>
@@ -204,9 +204,9 @@ const SignIn = () => {
           </div>
 
           {/* Sign Up Link */}
-          <p className="mt-6 text-center text-sm text-amber-600 dark:text-dark-muted">
+          <p className="mt-6 text-center text-sm text-amber-600">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-orange-600 dark:text-orange-400 font-semibold hover:underline">
+            <Link to="/signup" className="text-orange-600 font-semibold hover:underline">
               Sign up
             </Link>
           </p>
@@ -214,7 +214,7 @@ const SignIn = () => {
 
         {/* Back to Home */}
         <div className="mt-6 text-center">
-          <Link to="/" className="text-sm text-amber-600 dark:text-dark-muted hover:text-orange-600 dark:hover:text-orange-400">
+          <Link to="/" className="text-sm text-amber-600 hover:text-orange-600">
             ← Back to Home
           </Link>
         </div>
