@@ -34,6 +34,12 @@ Taskler is a full-featured task management web application designed for teams an
 - **Smooth Animations**: Framer Motion powered transitions and interactions
 - **Glass-morphism Effects**: Modern backdrop blur and transparency effects
 
+## System demo
+<p align="center">
+  <img src="src/assets/gif/TASK.gif" alt="Demo" width="950">
+</p>
+
+
 ## Tech Stack
 
 ### Frontend
