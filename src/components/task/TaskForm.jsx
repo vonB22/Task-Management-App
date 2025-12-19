@@ -68,7 +68,15 @@ const TaskForm = ({
     e.preventDefault();
     
     if (validate()) {
-      onSubmit(formData);
+      // If editing, include the original task data
+      if (task) {
+        onSubmit({
+          ...task,
+          ...formData
+        });
+      } else {
+        onSubmit(formData);
+      }
     }
   };
 

@@ -235,7 +235,11 @@ const SettingsPage = () => {
                       onClick={() => {
                         if (window.confirm('Are you sure you want to delete all tasks? This action cannot be undone.')) {
                           setTasks([]);
-                          alert('All tasks have been cleared.');
+                          showToast({
+                            title: 'All Tasks Cleared',
+                            message: 'All tasks have been permanently deleted',
+                            type: 'success'
+                          });
                         }
                       }}
                       className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all font-medium"

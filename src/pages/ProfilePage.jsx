@@ -1,15 +1,69 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useNotifications } from '../contexts/NotificationContext';
 
 /**
  * ProfilePage Component
  * User profile information and settings
  */
 const ProfilePage = () => {
-  const { user, getUserInitials } = useAuth();
+  const { user, getUserInitials, updateProfile } = useAuth();
+  const { showToast } = useNotifications();
   const [tasks] = useLocalStorage('tasks', []);
+  const [isEditing, setIsEditing] = useState(false);
+  const [formData, setFormData] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+    bio: user?.bio || ''
+  });
+  const [photoPreview, setPhotoPreview] = useState(user?.photo || null);
+
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check file size (max 2MB)
+      if (file.size > 2 * 1024 * 1024) {
+        showToast({
+          title: 'Error',
+          message: 'Image size must be less than 2MB',
+          type: 'error'
+        });
+        return;
+      }
+      
+      // Convert to base64 for local storage
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSaveProfile = () => {
+    updateProfile({
+      ...formData,
+      photo: photoPreview
+    });
+    setIsEditing(false);
+    showToast({
+      title: 'Profile Updated',
+      message: 'Your profile has been updated successfully',
+      type: 'success'
+    });
+  };
+
+  const handleCancel = () => {
+    setFormData({
+      name: user?.name || '',
+      email: user?.email || '',
+      bio: user?.bio || ''
+    });
+    setPhotoPreview(user?.photo || null);
+    setIsEditing(false);
+  };
 
   // Calculate user statistics
   const userStats = useMemo(() => {
@@ -70,18 +124,20 @@ const ProfilePage = () => {
                 <label className="block text-sm font-medium text-amber-700 mb-2">Full Name</label>
                 <input
                   type="text"
-                  value={user?.name || ''}
-                  readOnly
-                  className="w-full px-4 py-2 rounded-lg border border-amber-200 bg-orange-50 text-amber-950 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  value={isEditing ? formData.name : (user?.name || '')}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  readOnly={!isEditing}
+                  className={`w-full px-4 py-2 rounded-lg border border-amber-200 text-amber-950 focus:outline-none focus:ring-2 focus:ring-orange-500 ${isEditing ? 'bg-white' : 'bg-orange-50'}`}
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-amber-700 mb-2">Email</label>
                 <input
                   type="email"
-                  value={user?.email || ''}
-                  readOnly
-                  className="w-full px-4 py-2 rounded-lg border border-amber-200 bg-orange-50 text-amber-950 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  value={isEditing ? formData.email : (user?.email || '')}
+                  onChange={(e) => setFormData({...formData, email: e.target.value})}
+                  readOnly={!isEditing}
+                  className={`w-full px-4 py-2 rounded-lg border border-amber-200 text-amber-950 focus:outline-none focus:ring-2 focus:ring-orange-500 ${isEditing ? 'bg-white' : 'bg-orange-50'}`}
                 />
               </div>
             </div>
@@ -96,16 +152,27 @@ const ProfilePage = () => {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-amber-700 mb-2">Member Since</label>
-                <input
-                  type="text"
-                  value="January 2024"
-                  readOnly
-                  className="w-full px-4 py-2 rounded-lg border border-amber-200 bg-orange-50 text-amber-950 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                <label className="block text-sm font-medium text-amber-700 mb-2">Bio</label>
+                <textarea
+                  value={isEditing ? formData.bio : (user?.bio || '')}
+                  onChange={(e) => setFormData({...formData, bio: e.target.value})}
+                  readOnly={!isEditing}
+                  rows={3}
+                  className={`w-full px-4 py-2 rounded-lg border border-amber-200 text-amber-950 focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none ${isEditing ? 'bg-white' : 'bg-orange-50'}`}
                 />
               </div>
             </div>
           </div>
+          {isEditing && (
+            <div className="mt-6 flex justify-end">
+              <button
+                onClick={handleSaveProfile}
+                className="px-6 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg hover:from-orange-600 hover:to-red-600 transition-all shadow-md hover:shadow-lg font-medium"
+              >
+                Save Changes
+              </button>
+            </div>
+          )}
         </div>
       </motion.div>
 
